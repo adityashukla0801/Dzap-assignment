@@ -1,0 +1,29 @@
+* {
+  box-sizing: border-box;
+}
+
+.App {
+  padding: 5rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.mr-6 {
+  margin-right: 2rem;
+}
+
+@media (min-width: 768px) {
+  .App {
+    width: 750px;
+  }
+}
+@media (min-width: 992px) {
+  .App {
+    width: 970px;
+  }
+}
+@media (min-width: 1200px) {
+  .App {
+    width: 1170px;
+  }
+}
