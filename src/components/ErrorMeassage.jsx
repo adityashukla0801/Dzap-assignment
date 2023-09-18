@@ -1,19 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 
-const AlertMessage = styled.div`
-  width: 100%;
-  margin: 1rem 0;
-  border: 1px solid red;
-  border-radius: 5px;
-  color: red;
-  padding: 20px;
-  display: flex;
-  justify-content: flex-start;
-  align-items: baseline;
-`;
+const ErrorMeassage = ({ errortext, isDuplicate }) => {
+  const AlertMessage = styled.div`
+    width: 100%;
+    margin: 1rem 0;
+    border: ${isDuplicate ? "1px solid red" : "1px solid green"};
+    border-radius: 5px;
+    color: ${isDuplicate ? "red" : "green"};
+    padding: 20px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: baseline;
+  `;
 
-const ErrorMeassage = ({ errortext }) => {
   return (
     <>
       <AlertMessage>

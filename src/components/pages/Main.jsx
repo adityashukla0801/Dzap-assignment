@@ -9,13 +9,14 @@ const Main = () => {
   const [errortext, setErrortext] = useState("");
   const [isRender, setIsRender] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
-  const [duplicateArr, setDuplicateArr] = useState([]);
   const [changeBtnClr, setChangeBtnClr] = useState(false);
 
+  // Check the value is valid number
   var isNumber = function isNumber(value) {
-    return typeof +value === "number" && isFinite(value);
+    return typeof +value === "number" && value > 0 && isFinite(value);
   };
 
+  // Find the duplicate adderess
   function findDuplicateValuesWithIndices(arr) {
     const valueIndices = new Map();
     const duplicates = [];
@@ -40,6 +41,7 @@ const Main = () => {
     return duplicates;
   }
 
+  // Function for validate input like Non number and duplicate
   const validateInput = () => {
     let wrongAmount = [];
     let allAddress = [];
@@ -47,8 +49,8 @@ const Main = () => {
     // Check amount value is a number
     inputText.length &&
       inputText.map((element, index) => {
-        allAddress.push(element.split(" ")[0]);
-        if (!isNumber(element.split(" ")[1])) {
+        allAddress.push(element.split(/[,= ]+/)[0]);
+        if (!isNumber(element.split(/[,= ]+/)[1])) {
           wrongAmount.push(index + 1);
           setErrortext(`Line ${wrongAmount} wrong amount`);
         }
@@ -71,42 +73,64 @@ const Main = () => {
       });
       setErrortext(warningText);
       setIsDuplicate(true);
-      setDuplicateArr(duplicateValues);
       return;
+    } else {
+      setErrortext(`Valid Address and Amount`);
     }
     setIsDuplicate(false);
   };
 
+  // Function for reset all values
   const setValueClearState = (newValues) => {
     setInputText(newValues);
     setIsRender(true);
     setIsDuplicate(false);
-    setDuplicateArr([]);
     setErrortext("");
     setChangeBtnClr(true);
   };
 
+  // Function for Combine all values
   const combineBalance = () => {
-    const newValues = duplicateArr.map((item) => {
-      let sum = 0;
-      item.indices.map((ind) => {
-        debugger;
-        const currVal = inputText[ind].split(" ")[1];
-        sum += +currVal;
-        return ind;
-      });
-      return `${item.value} ${sum}`;
-    });
-    setValueClearState(newValues);
+    const addresses = {};
+
+    for (const item of inputText) {
+      const [address, valueStr] = item.split(/[=, ]+/);
+      const value = parseInt(valueStr, 10);
+
+      if (!addresses[address]) {
+        addresses[address] = 0;
+      }
+
+      addresses[address] += value;
+    }
+
+    const combinedArray = [];
+
+    for (const address in addresses) {
+      const combinedValue = addresses[address];
+      combinedArray.push(`${address}=${combinedValue}`);
+    }
+    setValueClearState(combinedArray);
   };
 
+  // Function for keep first values
   const keepFirstValue = () => {
-    const newValues = duplicateArr.map((item) => {
-      const firstIndex = item?.indices?.[0];
-      const currentValue = inputText[firstIndex];
-      return currentValue;
-    });
-    setValueClearState(newValues);
+    const uniqueAddresses = {};
+    const resultArray = [];
+
+    for (const item of inputText) {
+      // Split each item using =, comma, and space as delimiters
+      const parts = item.split(/[=, ]+/);
+      const address = parts[0];
+
+      // Check if the address is not already in uniqueAddresses
+      if (!uniqueAddresses[address]) {
+        // Add it to the uniqueAddresses object and to the result array
+        uniqueAddresses[address] = true;
+        resultArray.push(item);
+      }
+    }
+    setValueClearState(resultArray);
   };
 
   return (
@@ -123,7 +147,11 @@ const Main = () => {
           combineBalance={combineBalance}
         />
       ) : null}
-      {errortext ? <ErrorMeassage errortext={errortext} /> : ""}
+      {errortext ? (
+        <ErrorMeassage errortext={errortext} isDuplicate={isDuplicate} />
+      ) : (
+        ""
+      )}
       <Button clickFunction={validateInput} changeBtnClr={changeBtnClr} />
     </div>
   );
