@@ -78,6 +78,7 @@ const Main = () => {
       setIsValid(false);
       return;
     } else {
+      setIsValid(true);
       inputText.length && setErrortext(`Valid Address and Amount`);
     }
     setIsDuplicate(false);
