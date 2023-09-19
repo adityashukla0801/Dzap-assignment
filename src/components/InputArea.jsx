@@ -10,6 +10,7 @@ const TextArea = styled.div`
   font-size: 18px;
   font-weight: bold;
   resize: none;
+  min-height: 300px;
 `;
 
 const LabelText = styled.p`
@@ -21,6 +22,8 @@ const LabelText = styled.p`
 
 const InputArea = ({ setInputText, inputText, setIsRender, isRender }) => {
   const contentEditableRef = useRef(null);
+
+  // Function for get the text from textarea
   const handleContentChange = (e) => {
     // Extract the text content of each <li> element
     const liElements = Array.from(e.target.querySelectorAll("li"));
@@ -40,6 +43,13 @@ const InputArea = ({ setInputText, inputText, setIsRender, isRender }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isRender]);
 
+  // Order the list on paste
+  const handlePaste = (e) => {
+    e.preventDefault();
+    const text = e.clipboardData.getData("text/plain");
+    document.execCommand("insertText", false, text);
+  };
+
   return (
     <>
       <LabelText>Addresses with Amounts</LabelText>
@@ -47,6 +57,7 @@ const InputArea = ({ setInputText, inputText, setIsRender, isRender }) => {
         contentEditable="true"
         onInput={handleContentChange}
         ref={contentEditableRef}
+        onPaste={handlePaste}
       >
         <ol>
           <li></li>
