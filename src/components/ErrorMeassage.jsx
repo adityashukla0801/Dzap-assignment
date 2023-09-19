@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
 
-const ErrorMeassage = ({ errortext, isDuplicate }) => {
+const ErrorMeassage = ({ errortext, isValid }) => {
   const AlertMessage = styled.div`
     width: 100%;
     margin: 1rem 0;
-    border: ${isDuplicate ? "1px solid red" : "1px solid green"};
+    border: ${isValid ? "1px solid green" : "1px solid red"};
     border-radius: 5px;
-    color: ${isDuplicate ? "red" : "green"};
+    color: ${isValid ? "green" : "red"};
     padding: 20px;
     display: flex;
     justify-content: flex-start;

@@ -10,6 +10,7 @@ const Main = () => {
   const [isRender, setIsRender] = useState(false);
   const [isDuplicate, setIsDuplicate] = useState(false);
   const [changeBtnClr, setChangeBtnClr] = useState(false);
+  const [isValid, setIsValid] = useState(true);
 
   // Check the value is valid number
   var isNumber = function isNumber(value) {
@@ -53,6 +54,7 @@ const Main = () => {
         if (!isNumber(element.split(/[,= ]+/)[1])) {
           wrongAmount.push(index + 1);
           setErrortext(`Line ${wrongAmount} wrong amount`);
+          setIsValid(false);
         }
         return element;
       });
@@ -73,9 +75,10 @@ const Main = () => {
       });
       setErrortext(warningText);
       setIsDuplicate(true);
+      setIsValid(false);
       return;
     } else {
-      setErrortext(`Valid Address and Amount`);
+      inputText.length && setErrortext(`Valid Address and Amount`);
     }
     setIsDuplicate(false);
   };
@@ -87,6 +90,7 @@ const Main = () => {
     setIsDuplicate(false);
     setErrortext("");
     setChangeBtnClr(true);
+    setIsValid(true);
   };
 
   // Function for Combine all values
@@ -148,7 +152,7 @@ const Main = () => {
         />
       ) : null}
       {errortext ? (
-        <ErrorMeassage errortext={errortext} isDuplicate={isDuplicate} />
+        <ErrorMeassage errortext={errortext} isValid={isValid} />
       ) : (
         ""
       )}
